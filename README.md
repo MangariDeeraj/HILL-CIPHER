@@ -32,7 +32,9 @@ randomly from the set of invertible n × n matrices (modulo 26).
 
 ## PROGRAM
 ```
-import numpy as np
+
+
+ import numpy as np
 text = input("Enter the plaintext message: ")
 key_string = input("Enter the key matrix (space-separated values, row-wise): ")
 key_values = list(map(int, key_string.strip().split()))
@@ -87,7 +89,7 @@ print("Encrypted message:", cipher_text)
 ```
 
 ## OUTPUT
-<img width="1462" height="750" alt="image" src="https://github.com/user-attachments/assets/8695309a-81f5-45f0-9da7-3ae142e4cabe" />
+![Uploading WhatsApp Image 2025-09-18 at 10.33.00_ed9b3cbd.jpg…]()
 
 ## RESULT
 Thus,hill cipher has been successfully implemented.
