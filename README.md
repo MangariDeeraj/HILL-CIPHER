@@ -30,59 +30,62 @@ STEP-5: Combine all these groups to get the complete cipher text.
 
 ## PROGRAM 
 ```
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#define S 2
-int K[S][S] = {{3,3},{2,5}};
-int modInv(int a, int m) 
-{
-  a %= m;
-  for (int x = 1; x < m; x++) if ((a * x) % m == 1) return x;
-  return -1;
-}
-int det(int M[S][S]) { return (M[0][0]*M[1][1] - M[0][1]*M[1][0]) % 26; }
-void invMat(int M[S][S], int I[S][S])
-{
-  int d = det(M); if (d < 0) d += 26;
-  int di = modInv(d, 26); if (di == -1) exit(0);
-  I[0][0] =  M[1][1]*di % 26;
-  I[0][1] = -M[0][1]*di % 26;
-  I[1][0] = -M[1][0]*di % 26;
-  I[1][1] =  M[0][0]*di % 26;
-  for (int i = 0; i < S; i++) for (int j = 0; j < S; j++)
-    if (I[i][j] < 0) I[i][j] += 26;
-}
-void mult(int M[S][S], int in[], int out[]) 
-{
-  for (int i = 0; i < S; i++) 
-  {
-    out[i] = 0;
-    for (int j = 0; j < S; j++) out[i] += M[i][j]*in[j];
-    out[i] %= 26;
-  }
-}
-void hill(char *in, char *out, int enc) 
-{
-  int len = strlen(in), V[S], R[S], KM[S][S];
-  if (!enc) invMat(K, KM); else memcpy(KM, K, sizeof(K));
-  for (int i = 0; i < len; i += S) 
-  {
-    for (int j = 0; j < S; j++) V[j] = in[i + j] - 'A';
-    mult(KM, V, R);
-    for (int j = 0; j < S; j++) out[i + j] = R[j] + 'A';
-  }
-  out[len] = 0;
-}
-int main() {
-  char msg[] = "MANGARIDEERAJ", enc[100], dec[100];
-  hill(msg, enc, 1); printf("Encrypted: %s\n", enc);
-  hill(enc, dec, 0); printf("Decrypted: %s\n", dec);
-}
+import numpy as np
+text = input("Enter the plaintext message: ")
+key_string = input("Enter the key matrix (space-separated values, row-wise): ")
+key_values = list(map(int, key_string.strip().split()))
+size = int(len(key_values) ** 0.5)
+key_matrix = np.array(key_values).reshape(size, size)
+if len(text) % size != 0:
+    text += 'X' * (size - (len(text) % size))
+text = text.upper().replace(" ", "")
+text_matrix = []
+for i in range(0, len(text), size):
+    row = [ord(c) - ord('A') for c in text[i:i+size]]
+    text_matrix.append(row)
+text_matrix = np.array(text_matrix)
+result_matrix = np.dot(text_matrix, key_matrix)
+result_matrix = np.mod(result_matrix, 26)
+cipher_text = ""
+for row in result_matrix:
+    for val in row:
+        cipher_text += chr(val + ord('A'))
+print("Encrypted message:", cipher_text)
+import numpy as np
+
+text = input("Enter the plaintext message: ")
+key_string = input("Enter the key matrix (space-separated values, row-wise): ")
+
+key_values = list(map(int, key_string.strip().split()))
+size = int(len(key_values) ** 0.5)
+key_matrix = np.array(key_values).reshape(size, size)
+
+if len(text) % size != 0:
+    text += 'X' * (size - (len(text) % size))
+
+text = text.upper().replace(" ", "")
+
+text_matrix = []
+for i in range(0, len(text), size):
+    row = [ord(c) - ord('A') for c in text[i:i+size]]
+    text_matrix.append(row)
+
+text_matrix = np.array(text_matrix)
+
+result_matrix = np.dot(text_matrix, key_matrix)
+result_matrix = np.mod(result_matrix, 26)
+
+cipher_text = ""
+for row in result_matrix:
+    for val in row:
+        cipher_text += chr(val + ord('A'))
+
+print("Encrypted message:", cipher_text)
+
 ```
 ## OUTPUT
 
-<img width="1911" height="858" alt="image" src="https://github.com/user-attachments/assets/39f5e7b7-8e9b-492e-acba-e8ef649578f4" />
+![WhatsApp Image 2025-09-18 at 10 33 00_e3ef20a5](https://github.com/user-attachments/assets/735afe3a-9e38-4600-927a-38a377950ec1)
 
 ## RESULT
 
